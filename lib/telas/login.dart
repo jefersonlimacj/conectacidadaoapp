@@ -15,6 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
+  TextEditingController senha2Controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
