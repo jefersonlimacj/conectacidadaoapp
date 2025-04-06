@@ -223,7 +223,7 @@ class _TelaRegistroState extends State<TelaRegistro> {
                     child: FlutterMap(
                       options: MapOptions(
                           initialCenter: LatLng(-12.80724, -38.39958),
-                          initialZoom: 16,
+                          initialZoom: 17,
                           backgroundColor: corCinzaBase),
                       children: [
                         TileLayer(

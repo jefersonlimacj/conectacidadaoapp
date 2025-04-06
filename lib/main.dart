@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:conecta_cidadao/props/cores.dart';
 import 'package:conecta_cidadao/telas/cadastro.dart';
 import 'package:conecta_cidadao/telas/home.dart';
@@ -27,6 +29,9 @@ class _ConectaCidadaoState extends State<ConectaCidadao> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {PointerDeviceKind.touch},
+      ),
       title: 'Conecta Cidadão',
       theme: ThemeData(
         useMaterial3: true,

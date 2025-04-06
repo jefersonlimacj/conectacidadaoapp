@@ -1,7 +1,4 @@
 import 'dart:math';
-import 'package:conecta_cidadao/dados/http/http_client.dart';
-import 'package:conecta_cidadao/dados/repositorio/solicitacoes_repositorio.dart';
-import 'package:conecta_cidadao/dados/store/solicitacoes_store.dart';
 import 'package:intl/intl.dart';
 import 'package:conecta_cidadao/componentes/cardSoliciatacaoRes.dart';
 import 'package:conecta_cidadao/props/cores.dart';
@@ -15,17 +12,6 @@ class Resumoregistros extends StatefulWidget {
 }
 
 class _ResumoregistrosState extends State<Resumoregistros> {
-  final SolicitacoesStore dadosBaixados = SolicitacoesStore(
-    repositorio: SolicitacoesRepositorio(
-      client: HttpClient(),
-    ),
-  );
-
-  void initState() {
-    super.initState();
-    dadosBaixados.getSolicitacoes();
-  }
-
   @override
   Widget build(BuildContext context) {
     var tela = MediaQuery.of(context).size;
@@ -101,51 +87,6 @@ class _ResumoregistrosState extends State<Resumoregistros> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
-                          width: tela.width,
-                          height: tela.height * 0.5,
-                          decoration: BoxDecoration(color: corCat3),
-                          child: AnimatedBuilder(
-                              animation: Listenable.merge([
-                                dadosBaixados.isLoading,
-                                dadosBaixados.state,
-                                dadosBaixados.erro
-                              ]),
-                              builder: (context, child) {
-                                if (dadosBaixados.isLoading.value == true) {
-                                  return CircularProgressIndicator();
-                                } else if (dadosBaixados
-                                    .erro.value.isNotEmpty) {
-                                  return Center(
-                                    child: Text(
-                                      dadosBaixados.erro.value,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  );
-                                } else if (dadosBaixados.state.value.isEmpty) {
-                                  return const Center(
-                                    child: Text(
-                                      'Lista Vazia',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  );
-                                } else {
-                                  return ListView.builder(
-                                      padding: EdgeInsets.all(16),
-                                      itemCount:
-                                          dadosBaixados.state.value.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(
-                                              'solicitacao.titulo ${dadosBaixados.state.value.length}'),
-                                          subtitle:
-                                              Text('solicitacao.descricao'),
-                                          trailing: Text('solicitacao.status'),
-                                        );
-                                      });
-                                }
-                              }),
-                        ),
                         Cardsoliciatacaores(
                           categoria: 'Comércio Irregular',
                           subCategoria: 'Comércio sem Nota Fiscal',

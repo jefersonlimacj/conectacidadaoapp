@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:conecta_cidadao/componentes/inputCadastro.dart';
 import 'package:conecta_cidadao/telas/cadastro.dart';
 import 'package:conecta_cidadao/telas/home.dart';
 import 'package:conecta_cidadao/telas/recuperarSenha.dart';
 import 'package:flutter/material.dart';
 import 'package:conecta_cidadao/props/cores.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,9 +16,43 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  GlobalKey _formKey = GlobalKey<FormFieldState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
-  TextEditingController senha2Controller = TextEditingController();
+
+  Future<void> login(String email, String senha) async {
+    final url = Uri.parse('http://192.168.1.2:5172/login/usuario/app');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'senha': senha}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // final token = data['token']; // se sua API usar token
+        // final nome = data['nome'];
+
+        // Salvar o usuário localmente (veja próximo passo)
+        // await saveUserData(data);
+
+        print(data['nome']);
+
+        // Redirecionar para a próxima tela
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        // Login inválido
+        print('Erro: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Email ou senha incorretos.')),
+        );
+      }
+    } catch (e) {
+      print('Erro de conexão: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +113,10 @@ class _LoginState extends State<Login> {
                       ),
                       FilledButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
+                          login(emailController.text, senhaController.text);
+                          // Navigator.of(context).pushReplacement(
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const HomePage()));
                         },
                         style: FilledButton.styleFrom(
                             minimumSize: Size(
